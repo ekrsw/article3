@@ -1,0 +1,6 @@
+.venv
+.test_db
+.__pycache__
+venv/
+test_db/
+__pycache__/
