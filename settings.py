@@ -1,6 +1,6 @@
 HEADLESS_MODE = False
 
-DB_PATH = r'C:\Users\eisuke_koresawa\Desktop\knowlage_mainte_project\article3\test_db'
+DB_PATH = r'\\mjs.co.jp\datas\CSC共有フォルダ\enjoyナレッジメンテナンス\第47期\knowlage_db'
 DB_NAME = 'datamaster.accdb'
 
 # SQLクエリ
