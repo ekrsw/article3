@@ -1,8 +1,13 @@
+import logging
 import os
 import pandas as pd
 import pyodbc as pyo
 
 import settings
+
+formatter = '%(filename)s - %(levelname)s - %(asctime)s - %(message)s'
+logging.basicConfig(filename=settings.LOG_FILE, level=logging.INFO, format=formatter)
+logger = logging.getLogger(__name__)
 
 # SQLクエリ
 read_sql_str = '''SELECT *
@@ -26,6 +31,7 @@ class AccessDB:
         )
 
     def read_access(self) -> pd.DataFrame:
+        logger.debug('データベース読込開始')
         # データベース接続
         con = pyo.connect(self.con_str)
         # SQLクエリを実行し、Pandas DataFrameに結果を取り込む
@@ -35,6 +41,7 @@ class AccessDB:
         return df
     
     def update_access(self, id) -> None:
+        logger.debug('データベース書込開始')
         # データベース接続
         con = pyo.connect(self.con_str)
         # カーソルを取得

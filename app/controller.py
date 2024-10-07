@@ -1,11 +1,11 @@
-import datetime
 from app.datamaster import access_db
 from app.dynamics import Dynamics
 import logging
+import time
 
 import settings
 
-formatter = '%(levelname)s : %(asctime)s : %(message)s'
+formatter = '%(filename)s - %(levelname)s - %(asctime)s - %(message)s'
 logging.basicConfig(filename=settings.LOG_FILE, level=logging.INFO, format=formatter)
 logger = logging.getLogger(__name__)
 
@@ -13,6 +13,8 @@ def update_dynamics():
     df = access_db.read_access()
     dynamics = Dynamics()
     for i, row in df.iterrows():
+        id = row['提出ID']
+        kba = row['記事番号']
         url = row['URL']
         title = row['タイトル']
         info_category = row['情報カテゴリ']
@@ -24,9 +26,7 @@ def update_dynamics():
         answer = row['回答']
         add_comments = row['追加コメント']
 
-        dynamics.update_dynamics(url, title=title, info_category=info_category, key_words=key_words, important=important, open_public_start=open_public_start, open_public_end=open_public_end, question=question, answer=answer, add_comments=add_comments)
-        access_db.update_access(row['提出ID'])
-        
-        logger.info(f'ID: {row["提出ID"]} : {row["記事番号"]}')
+        dynamics.update_dynamics(id, kba, url, title=title, info_category=info_category, key_words=key_words, important=important, open_public_start=open_public_start, open_public_end=open_public_end, question=question, answer=answer, add_comments=add_comments)
+
         print(f'提出ID: {row["提出ID"]} 記事番号: {row["記事番号"]} 反映完了')
         

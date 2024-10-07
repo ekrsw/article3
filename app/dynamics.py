@@ -6,9 +6,14 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
+# access_dbをimport
+from app.datamaster import access_db
+
 # settingファイルの読込み
 import settings
 
+formatter = '%(filename)s - %(levelname)s - %(asctime)s - %(message)s'
+logging.basicConfig(filename=settings.LOG_FILE, level=logging.INFO, format=formatter)
 logger = logging.getLogger(__name__)
 
 class Dynamics(object):
@@ -21,7 +26,7 @@ class Dynamics(object):
         self.headless_mode = headless_mode
     
     def constructa(self):
-        if hasattr(self, 'driver'):
+        if getattr(self, 'driver', None):
             self.driver.close()
             self.driver = None
 
@@ -41,24 +46,28 @@ class Dynamics(object):
         self.driver.implicitly_wait(5)
     
     def close_driver(self):
-        if hasattr(self, 'driver'):
+        if getattr(self, 'driver', None):
             self.driver.close()
             self.driver = None
 
-    def update_dynamics(self, url, title=None, info_category=None, key_words=None, important=None, open_public_start=None, open_public_end=None, question=None, answer=None, add_comments=None):
+    def update_dynamics(self, id, kba, url, title=None, info_category=None, key_words=None, important=None, open_public_start=None, open_public_end=None, question=None, answer=None, add_comments=None):
+        ctn = 0
         while True:
-            ctn = 0
             try:
                 self.constructa()
                 self.__update(url, title, info_category, key_words, important, open_public_start, open_public_end, question, answer, add_comments)
                 self.close_driver()
+                access_db.update_access(id)
+                logger.info(f'ID: {id} : {kba} : {url} : Success')
                 break
 
             except Exception as e:
                 ctn += 1
                 if ctn > settings.RETRY_COUNT:
+                    logger.info(f'ID: {id} : {kba} : {url} : {e}')
                     print('error')
                     break
+                print(e)
                 continue
 
     def __update(self, url, title=None, info_category=None, key_words=None, important=None, open_public_start=None, open_public_end=None, question=None, answer=None, add_comments=None):
