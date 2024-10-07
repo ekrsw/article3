@@ -162,10 +162,10 @@ class Dynamics(object):
             key_words_el.send_keys(key_words)
 
         # 重要 important
-        if important is not None:
+        '''if important:
             self.driver.find_element(By.ID, 'rad_enjoy_important2').click()
         else:
-            self.driver.find_element(By.ID, 'rad_enjoy_important1').click()
+            self.driver.find_element(By.ID, 'rad_enjoy_important1').click()'''
 
         # 公開期限（開始） open_public_start
         if open_public_start is not None:
