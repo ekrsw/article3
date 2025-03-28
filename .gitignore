@@ -4,3 +4,4 @@
 venv/
 test_db/
 __pycache__/
+appserver.log
